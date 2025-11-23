@@ -1,0 +1,6 @@
+{
+  "title": "kind-local-docker-image",
+  "key": "kind-local-docker-image",
+  "summary": "- kind는 Kubernetes 클러스터를 Docker 컨테이너 내부에 생성해 로컬 Docker 데몬과 kind 노드의 containerd가 완전히 분리된 환경이다.  \n- Pod가 로컬 이미지를 바로 사용하지 못하는 이유는 kind 노드에 이미지가 없으면 원격 레지스트리에서 pull을 시도하기 때문이다.  \n- 로컬 이미지를 사용하려면 `kind load docker-image <이미지명>` 명령어로 이미지를 kind 노드에 직접 로드해야 한다.  \n- imagePullPolicy 기본값이 `Always`이므로, 로컬 이미지를 사용하려면 명시적 버전 태그와 `IfNotPresent` 정책을 설정하는 것이 좋다.  \n- kind 노드 내부 이미지 목록 확인과 삭제는 `docker exec kind-control-plane crictl images` 및 `crictl rmi` 명령어로 containerd 기준으로 수행해야 한다.  \n- 이 과정을 이해하면 로컬에서 빌드한 이미지를 kind 노드에 로드하고 Kubernetes에서 안정적으로 테스트할 수 있다.",
+  "updatedAt": "2025-11-23T10:33:50.699Z"
+}
