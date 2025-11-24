@@ -1,12 +1,19 @@
-{{ define "main" }} {{ $listtitle := .Title }}
+{{ define "main" }}
+{{ $pageTitle := .Title }}
+
 <h1>{{ .Title }}</h1>
-{{ .Content }} {{ range .Pages }}
-<li>
-  {{ if eq $listtitle "Posts" }} {{ .Date | time.Format
-  site.Params.theme_config.date_format }} -
-  <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
-  {{ else }}
-  <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+{{ .Content }}
+
+<ul>
+  {{ range .Pages }}
+  <li>
+    {{ if eq $pageTitle "Posts" }}
+    {{ .Date | time.Format site.Params.theme_config.date_format }} -
+    <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+    {{ else }}
+    <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+    {{ end }}
+  </li>
   {{ end }}
-</li>
-{{ end }} {{ end }}
+</ul>
+{{ end }}
