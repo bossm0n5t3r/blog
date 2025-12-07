@@ -19,10 +19,8 @@ series = ["k8s", "kubernetes"]
 ```mermaid
 stateDiagram-v2
     [*] --> Pending
-
     Pending --> Running: 컨테이너 시작 완료
     Pending --> Failed: 스케줄링/이미지 오류
-
     Running --> Succeeded: 모든 컨테이너 정상 종료
     Running --> Failed: 컨테이너 비정상 종료 / OOM 등
 
@@ -48,22 +46,18 @@ stateDiagram-v2
 ```mermaid
 flowchart TD
 
-    %% --- 첫 번째 단일 ReplicaSet 예시 ---
+%% --- 첫 번째 단일 ReplicaSet 예시 ---
     RS0[ReplicaSet]
     RS0 --> RS0P1[Pod]
     RS0 --> RS0P2[Pod]
-
-    %% --- Deployment 아래 두 개의 ReplicaSet (v1, v2) ---
+%% --- Deployment 아래 두 개의 ReplicaSet (v1, v2) ---
     D[Deployment]
-
     D -->|v1| RS1[ReplicaSet]
     D -->|v2| RS2[ReplicaSet]
-
-    %% v1 ReplicaSet의 Pods
+%% v1 ReplicaSet의 Pods
     RS1 --> RS1P1[Pod]
     RS1 --> RS1P2[Pod]
-
-    %% v2 ReplicaSet의 Pods
+%% v2 ReplicaSet의 Pods
     RS2 --> RS2P1[Pod]
     RS2 --> RS2P2[Pod]
     RS2 --> RS2P3[Pod]
@@ -143,14 +137,11 @@ flowchart TD
 %% ===========================
 %% 1) ReplicaSet 단독 업데이트 (위쪽 그림)
 %% ===========================
-
     subgraph RSUpdate[ReplicaSet의 컨테이너를<br/>업데이트할 때]
         direction LR
-
         RS_old[ReplicaSet]
         RS_old --> RSP1_old[Pod]
         RS_old --> RSP2_old[Pod]
-
         RS_new[ReplicaSet<br/>v2]
         RS_new --> RSP1_new[Pod]
         RS_new --> RSP2_new[Pod]
@@ -163,18 +154,13 @@ flowchart TD
 %% ===========================
 %% 2) Deployment의 Rolling Update (아래쪽 그림)
 %% ===========================
-
     subgraph DeployUpdate[Deployment의 컨테이너를<br/>업데이트할 때]
         direction LR
-
         D[Deployment]
-
         D -->|v2| RS1[ReplicaSet]
         D -->|v1| RS2[ReplicaSet]
-
         RS1 --> RS1P1[Pod]
         RS1 --> RS1P2[Pod]
-
         RS2 --> RS2P1[Pod]
         RS2 --> RS2P2[Pod]
     end
@@ -826,11 +812,10 @@ Handling connection for 8080
 
 ```mermaid
 flowchart LR
-        subgraph AsIs[Pod가 교체되면 접속 주소도 변경?]
-        %% 개별 Pod들
+    subgraph AsIs[Pod가 교체되면 접속 주소도 변경?]
+    %% 개별 Pod들
         P1[Pod<br/>10.X.X.1]
         P2[Pod<br/>10.X.X.2]
-    
         APP[애플리케이션]
         APP --> P1
         APP --> P2
@@ -839,16 +824,13 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-        subgraph ToBe[도메인 이름으로 지정 가능, Pod 가 교체되어도 IP는 바뀌지 않음]
+    subgraph ToBe[도메인 이름으로 지정 가능, Pod 가 교체되어도 IP는 바뀌지 않음]
         P1[Pod]
         P2[Pod]
-    
         S[Service<br/>service-name.<br/>default.svc.cluster.local]
-    
         S --> P1
-        S --> P2    
-
-        APP[애플리케이션] --> |10.X.X.5| S
+        S --> P2
+        APP[애플리케이션] -->|10 . X . X . 5| S
     end
 ```
 
