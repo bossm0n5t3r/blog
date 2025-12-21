@@ -59,20 +59,13 @@ function clampText(text: string, maxChars = MAX_INPUT_CHARS) {
 function shouldSkipFile(relPath: string) {
   const p = relPath.replace(/\\/g, "/");
   const segments = p.split("/");
+  const baseName = segments[segments.length - 1];
+
+  if (baseName === "_index.md") return true;
 
   return segments.some(seg =>
     EXCLUDE_PREFIXES.some(prefix => seg.startsWith(prefix))
   );
-}
-
-// 요약 파일이 최신인지 확인
-function isSummaryUpToDate(summaryPath: string, sourcePath: string) {
-  if (!fs.existsSync(summaryPath)) return false;
-
-  const summaryStat = fs.statSync(summaryPath);
-  const sourceStat = fs.statSync(sourcePath);
-
-  return summaryStat.mtimeMs >= sourceStat.mtimeMs;
 }
 
 async function aiSummarize(text: string, title: string) {
@@ -144,9 +137,9 @@ async function main() {
 
     const outPath = path.join(SUMMARY_DIR, `${key}.json`);
 
-    // ✅ 최신이면 요약 스킵 (force면 무시)
-    if (!FORCE && isSummaryUpToDate(outPath, fullPath)) {
-      console.log(`✅ up-to-date, skip: ${key}`);
+    // ✅ 요약 파일이 이미 있으면 스킵 (force면 무시)
+    if (!FORCE && fs.existsSync(outPath)) {
+      console.log(`✅ summary exists, skip: ${key}`);
       continue;
     }
 
