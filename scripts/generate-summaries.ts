@@ -14,6 +14,41 @@ const SUMMARY_DIR = path.join(process.cwd(), "data/summaries");
 // FORCE_SUMMARY=1 pnpm summary  -> 요약이 있어도 무조건 재생성
 const FORCE = process.env.FORCE_SUMMARY === "1";
 
+// 특정 포스트만 요약 (경로 또는 key)
+// 예: pnpm summary -- --only=posts/hello.md
+// 예: pnpm summary -- --only=hello-world
+const ONLY = (() => {
+  if (process.env.SUMMARY_ONLY) {
+    return process.env.SUMMARY_ONLY.split(",").map(s => s.trim()).filter(Boolean);
+  }
+
+  const args = process.argv.slice(2);
+  const values: string[] = [];
+
+  for (let i = 0; i < args.length; i += 1) {
+    const arg = args[i];
+    if (arg === "--only" || arg === "--post") {
+      const next = args[i + 1];
+      if (next) {
+        values.push(next);
+        i += 1;
+      }
+      continue;
+    }
+    if (arg.startsWith("--only=")) {
+      values.push(arg.slice("--only=".length));
+    }
+    if (arg.startsWith("--post=")) {
+      values.push(arg.slice("--post=".length));
+    }
+  }
+
+  return values
+  .flatMap(value => value.split(","))
+  .map(s => s.trim())
+  .filter(Boolean);
+})();
+
 // 1) 제외할 파일 prefix들
 const DEFAULT_EXCLUDE_PREFIXES = [
   "_",          // 예: _draft.md, _private/...
@@ -66,6 +101,29 @@ function shouldSkipFile(relPath: string) {
   return segments.some(seg =>
     EXCLUDE_PREFIXES.some(prefix => seg.startsWith(prefix))
   );
+}
+
+function normalizeTarget(target: string) {
+  const trimmed = target.trim().replace(/\\/g, "/");
+  return trimmed.replace(/^\.\//, "");
+}
+
+function matchesOnlyTarget(file: string, key: string) {
+  if (ONLY.length === 0) return true;
+
+  const normalizedFile = normalizeTarget(file);
+  const candidates = new Set([
+    normalizedFile,
+    `posts/${normalizedFile}`,
+    key,
+  ]);
+
+  for (const rawTarget of ONLY) {
+    const target = normalizeTarget(rawTarget);
+    if (candidates.has(target)) return true;
+  }
+
+  return false;
 }
 
 async function aiSummarize(text: string, title: string) {
@@ -135,10 +193,15 @@ async function main() {
     const key = toKeyFromRelPath(file);
     const title = data.title ?? key;
 
+    if (!matchesOnlyTarget(file, key)) {
+      console.log(`⏭️ skipped by only: ${file}`);
+      continue;
+    }
+
     const outPath = path.join(SUMMARY_DIR, `${key}.json`);
 
     // ✅ 요약 파일이 이미 있으면 스킵 (force면 무시)
-    if (!FORCE && fs.existsSync(outPath)) {
+    if (!FORCE && ONLY.length === 0 && fs.existsSync(outPath)) {
       console.log(`✅ summary exists, skip: ${key}`);
       continue;
     }
