@@ -59,6 +59,23 @@ pre {
   }
 }
 
+pre > code:not([class]) {
+  display: block;
+  background-color: #f5f6f7;
+  color: #222;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+}
+
+.highlight pre > code {
+  background-color: inherit;
+  color: inherit;
+  border: 0;
+  border-radius: inherit;
+  padding: inherit;
+}
+
 li {
   margin: 0.5rem 0;
 }
@@ -70,6 +87,7 @@ td {
 
 table {
   border-collapse: collapse;
+  margin: 1rem 0;
 }
 
 table td,
