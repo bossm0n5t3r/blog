@@ -1,5 +1,6 @@
 +++
 date = 2023-11-22T04:00:00+09:00
+lastmod = 2025-12-25
 title = "Bucket4j 로 API Rate Limiting 를 구현해보자"
 authors = ["Ji-Hoon Kim"]
 tags = ["Spring Boot", "Bucket4j", "API Rate Limiting"]
@@ -18,20 +19,68 @@ categories = ["Spring Boot", "Bucket4j", "API Rate Limiting"]
 
 하지만 찾아보니 생각보다 예제가 충분하지 않았고, 오래된 정보들이 많아 적용하는데 어려움을 겪었다.
 
-그래서 아예 따로 `spring-boot-starter-web` 과 `spring-boot-starter-webflux` 를 간단한 demo 로
+그래서 아예 `core`, `webflux`, `webmvc` 로 멀티 모듈을 구성하고,
+`spring-boot-starter-web` 과 `spring-boot-starter-webflux` 를 각각 간단하게 적용해보았다.
 
-각각 간단하게 적용해보았다.
+## 프로젝트 구조
+
+```
+core/
+  src/main/kotlin/.../application/PricingPlanService.kt
+  src/main/kotlin/.../enumerated/PricingPlan.kt
+  src/main/kotlin/.../security/JWTProvider.kt
+webflux/
+  src/main/kotlin/.../configuration/RateLimitInterceptor.kt
+  src/main/kotlin/.../presentation/DummyController.kt
+  src/main/resources/application.yaml
+webmvc/
+  src/main/kotlin/.../configuration/RateLimitInterceptor.kt
+  src/main/kotlin/.../presentation/DummyController.kt
+  src/main/resources/application.yaml
+http/request.http
+```
+
+- `core`: JWT, PricingPlan, Bucket 생성/캐시 등 공통 로직
+- `webflux`: `WebFilter` 기반 Rate Limiting
+- `webmvc`: `HandlerInterceptor` 기반 Rate Limiting
+
+## 실행
+
+```bash
+./gradlew :webmvc:bootRun
+```
+
+```bash
+./gradlew :webflux:bootRun
+```
+
+엔드포인트는 다음과 같다.
+
+- WebFlux: `GET http://localhost:1009/webflux`
+- Web MVC: `GET http://localhost:1013/webmvc`
+
+요청 샘플은 `http/request.http` 에 정리되어 있다.
 
 ## Getting Started
 
-라이브러리는 아래와 같이 추가해주면 된다.
+라이브러리는 버전 카탈로그를 통해 아래와 같이 추가해주면 된다.
+
+```toml
+# gradle/libs.versions.toml
+[versions]
+bucket4j = "8.15.0"
+
+[libraries]
+bucket4j-jdk17-core = { group = "com.bucket4j", name = "bucket4j_jdk17-core", version.ref = "bucket4j" }
+```
 
 ```kotlin
+// core/build.gradle.kts
 dependencies {
     ...
 
     // Bucket4j
-    implementation("com.bucket4j:bucket4j-core:8.6.0")
+    api(libs.bucket4j.jdk17.core)
 }
 ```
 
@@ -182,27 +231,36 @@ webflux 의 경우 `WebFilter` 를 구현하여 처리하였다.
 class RateLimitInterceptor(
     private val pricingPlanService: PricingPlanService,
 ) : WebFilter {
-    private val logger = KotlinLogging.logger {}
-
     override fun filter(
         exchange: ServerWebExchange,
         chain: WebFilterChain,
     ): Mono<Void> {
-        return Mono.just(getAuthorizationHeader(exchange))
-            .map { getRowToken(it) }
+        return Mono
+            .just(getAuthorizationHeader(exchange))
+            .map { it.substringAfter(BEARER_) }
             .flatMap { token ->
+                val api = exchange.request.path.value()
+
                 val bucket = pricingPlanService.resolveBucket(token)
                 val probe = bucket.tryConsumeAndReturnRemaining(1)
                 val remainingLimit = probe.remainingTokens
-                if (probe.isConsumed) {
-                    logger.info { "Remaining limit - $remainingLimit" }
-                    exchange.response.headers.set(X_RATE_LIMIT_REMAINING, remainingLimit.toString())
-                } else {
+                if (probe.isConsumed.not()) {
                     val waitForRefill = probe.nanosToWaitForRefill / NANO_SECONDS
-                    exchange.response.headers.set(X_RATE_LIMIT_RETRY_AFTER_SECONDS, waitForRefill.toString())
-                    exchange.response.setStatusCode(HttpStatus.TOO_MANY_REQUESTS)
+                    exchange.response.headers.set(
+                        X_RATE_LIMIT_RETRY_AFTER_SECONDS,
+                        waitForRefill.toString()
+                    )
+                    exchange.response.statusCode = HttpStatus.TOO_MANY_REQUESTS
+                    LOGGER.error(
+                        "You have exhausted your API Request Quota, {}, {}, {}",
+                        api,
+                        remainingLimit,
+                        waitForRefill,
+                    )
                     return@flatMap exchange.response.setComplete()
                 }
+                exchange.response.headers.set(X_RATE_LIMIT_REMAINING, remainingLimit.toString())
+                LOGGER.info("Remaining limit, {}, {}", api, remainingLimit)
                 chain.filter(exchange)
             }
     }
@@ -211,14 +269,6 @@ class RateLimitInterceptor(
         return exchange.request.headers[HttpHeaders.AUTHORIZATION]
             ?.firstOrNull { it.isNotEmpty() }
             ?: ""
-    }
-
-    private fun getRowToken(authorizationHeader: String): String {
-        return if (authorizationHeader.startsWith(BEARER_)) {
-            authorizationHeader.substringAfter(BEARER_)
-        } else {
-            authorizationHeader
-        }
     }
 }
 ```
@@ -271,36 +321,35 @@ Response code: 429 (Too Many Requests); Time: 2ms (2 ms); Content length: 0 byte
 class RateLimitInterceptor(
     private val pricingPlanService: PricingPlanService,
 ) : HandlerInterceptor {
-    private val logger = KotlinLogging.logger {}
-
     override fun preHandle(
         request: HttpServletRequest,
         response: HttpServletResponse,
         handler: Any,
     ): Boolean {
         val authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION) ?: ""
-        val token =
-            if (authorizationHeader.startsWith(BEARER_)) {
-                authorizationHeader.substringAfter(BEARER_)
-            } else {
-                authorizationHeader
-            }
+        val token = authorizationHeader.substringAfter(BEARER_)
+        val api = request.requestURI
 
         val bucket = pricingPlanService.resolveBucket(token)
         val probe = bucket.tryConsumeAndReturnRemaining(1)
         val remainingLimit = probe.remainingTokens
 
         return if (probe.isConsumed) {
-            logger.info { "Remaining limit - $remainingLimit" }
             response.addHeader(X_RATE_LIMIT_REMAINING, remainingLimit.toString())
+            LOGGER.info("Remaining limit, {}, {}", api, remainingLimit)
             true
         } else {
-            logger.error { "You have exhausted your API Request Quota" }
             val waitForRefill = probe.nanosToWaitForRefill / NANO_SECONDS
             response.addHeader(X_RATE_LIMIT_RETRY_AFTER_SECONDS, waitForRefill.toString())
             response.sendError(
                 HttpStatus.TOO_MANY_REQUESTS.value(),
                 "You have exhausted your API Request Quota",
+            )
+            LOGGER.error(
+                "You have exhausted your API Request Quota, {}, {}, {}",
+                api,
+                remainingLimit,
+                waitForRefill
             )
             false
         }
@@ -317,7 +366,7 @@ class AppConfig(
 ) : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(rateLimitInterceptor)
-            .addPathPatterns("/web/**") // prevent call twice
+            .addPathPatterns("/webmvc/**") // prevent call twice
     }
 }
 ```
