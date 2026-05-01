@@ -22,20 +22,6 @@ katex = true
 [params.theme_config]
 date_format = "2006-01-02"
 
-[params.giscus] # https://giscus.app
-repo = "bossm0n5t3r/blog-comments"
-repoID = "MDEwOlJlcG9zaXRvcnkyMzYwNDc0NTQ="
-category = "Announcements"
-categoryID = "DIC_kwDODhHMXs4CYpdQ"
-mapping = "pathname"
-strict = "1"
-reactionsEnabled = "1"
-emitMetadata = "0"
-inputPosition = "top"
-theme = "light_high_contrast"
-lang = "ko"
-loading = "lazy"
-
 [taxonomies]
 category = "categories"
 series = "series"
@@ -77,8 +63,8 @@ weight = 6
 url = "about/"
 
 [[menu.footer]]
-name = "Github"
-url = "https://github.com/bossm0n5t3r/"
+name = "Codeberg"
+url = "https://codeberg.org/bossm0n5t3r"
 weight = 1
 
 [[menu.footer]]

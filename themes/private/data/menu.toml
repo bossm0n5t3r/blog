@@ -8,7 +8,11 @@ title = "The archive that records everything"
 title = "Mathematician and Software Engineer"
 
 [[entries.entries]]
-title = "Github"
+title = "Codeberg"
+url = "https://codeberg.org/bossm0n5t3r"
+
+[[entries.entries.entries]]
+title = "Migrated from GitHub"
 url = "https://github.com/bossm0n5t3r/"
 
 [[entries.entries]]
