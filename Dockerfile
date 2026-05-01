@@ -11,9 +11,7 @@ WORKDIR /src
 COPY . .
 
 # Install dependencies and build
-# Note: Skip summary generation if OPENAI_API_KEY is not provided
 RUN pnpm install --frozen-lockfile \
-    && (pnpm summary || echo "Skipping summary generation") \
     && hugo --gc --minify \
     && npx pagefind --source "public"
 
