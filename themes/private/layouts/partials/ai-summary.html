@@ -8,7 +8,7 @@
 {{ $rel = replace $rel ".md" "" }}
 {{ $key := replace $rel "/" "-" }}
 
-{{ $summary := index site.Data.summaries $key }}
+{{ $summary := index hugo.Data.summaries $key }}
 
 {{ if $summary }}
 <hr/>
