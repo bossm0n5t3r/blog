@@ -1,6 +1,6 @@
 title = "The Archive"
 theme = "private"
-languagecode = "en"
+locale = "en"
 
 pagination.pagerSize = 20
 
