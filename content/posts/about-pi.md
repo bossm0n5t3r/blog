@@ -1,5 +1,6 @@
 +++
 date = 2026-05-29T17:30:00+09:00
+lastmod = 2026-06-03
 title = "Pi Agent: 미니멀 터미널 코딩 에이전트"
 authors = ["Ji-Hoon Kim"]
 tags = ["AI", "Agent", "Terminal", "Coding Agent", "Pi Agent"]
@@ -9,14 +10,14 @@ series = ["AI Agent"]
 
 # About Pi
 
-- Pi Agent는 작은 코어 위에 필요한 기능을 직접 얹어 쓰는 미니멀 터미널 코딩 에이전트다.
+- Pi Agent는 필요한 기능을 직접 얹어 쓰는 미니멀 터미널 코딩 에이전트다.
   - 핵심 철학은 "코어는 작게, 가장자리는 프로그래밍 가능하게" 유지하는 것이다.
-  - 기본 코어는 에이전트 작업에 꼭 필요한 기능에 집중한다.
+  - 기본 코어는 에이전트 작업에 꼭 필요한 도구에 집중한다.
     - `read`
     - `bash`
     - `edit`
     - `write`
-  - 나머지는 사용자가 원하는 방식으로 확장한다.
+  - 그 밖의 기능은 사용자가 워크플로에 맞게 확장한다.
     - 모델
     - `AGENTS.md`
     - skills
@@ -27,29 +28,30 @@ series = ["AI Agent"]
 
 ## 무엇이 다른가
 
-- Pi는 많은 기능을 기본으로 넣어두지 않는다.
-  - 내장 MCP 없음
-  - 내장 sub-agent 없음
-  - permission popup 없음
-  - plan mode 없음
-  - 내장 TODO 기능 없음
-  - background bash 없음
-- 대신 필요한 기능을 직접 만들거나 추가하는 방식을 권장한다.
-  - MCP가 필요하면 adapter나 package로 붙인다.
-  - sub-agent가 필요하면 extension이나 package로 구성한다.
-  - 격리된 실행이 필요하면 container에서 돌린다.
-  - 계획은 파일에 쓰거나 prompt template로 반복 가능하게 만든다.
-  - TODO 관리는 `TODO.md`를 쓰거나 직접 기능을 만든다.
-  - 매일 쓰는 워크플로는 skill, prompt template, extension, package로 만든다.
+- Pi는 많은 기능을 기본으로 넣어두기보다, 필요한 기능을 직접 만들거나 추가하는 방식을 권장한다.
+  - 기본적으로 제공하지 않는 기능
+    - 내장 MCP
+    - 내장 sub-agent
+    - permission popup
+    - plan mode
+    - 내장 TODO 기능
+    - background bash
+  - 대신 필요한 방식으로 구성할 수 있다.
+    - MCP가 필요하면 adapter나 package로 붙인다.
+    - sub-agent가 필요하면 extension이나 package로 구성한다.
+    - 격리된 실행이 필요하면 container에서 실행한다.
+    - 계획은 파일에 쓰거나 prompt template로 반복 가능하게 만든다.
+    - TODO 관리는 `TODO.md`를 쓰거나 직접 기능을 만든다.
+    - 매일 쓰는 워크플로는 skill, prompt template, extension, package로 만든다.
 
 ## 모델과 설정
 
 - Pi는 구독, API key, 로컬 모델, 커스텀 provider와 연결할 수 있다.
-  - 구독 기반
+  - 구독 기반 provider
     - Claude
     - OpenAI
     - GitHub Copilot
-  - API key 기반
+  - API key 기반 provider
     - Anthropic
     - OpenAI
     - Gemini
@@ -81,32 +83,40 @@ series = ["AI Agent"]
 
 ## 컨텍스트와 지시사항
 
-- Pi는 프롬프트를 여러 층으로 쌓아서 만든다.
+- Pi는 프롬프트를 하나의 큰 덩어리로 고정해두지 않고, 필요한 지시사항을 여러 레이어로 쌓아 구성한다.
   - 기본 시스템 프롬프트
-  - `.pi/APPEND_SYSTEM.md`
-  - `AGENTS.md` 또는 `CLAUDE.md`
-  - skills 목록
-  - 현재 날짜와 작업 디렉터리 정보
-- `AGENTS.md`는 프로젝트 규칙을 알려주는 데 적합하다.
-  - 전역 규칙은 홈 디렉터리 쪽에 둔다.
-  - 프로젝트별 규칙은 작업 폴더 안에 둔다.
-  - 전역 설정에는 모든 프로젝트에 적용되어도 안전한 내용만 넣는 것이 좋다.
+    - `.pi/APPEND_SYSTEM.md`
+      - `AGENTS.md` 또는 `CLAUDE.md`
+        - skills 목록
+          - 현재 날짜와 작업 디렉터리 정보
+- Context files는 세션마다 반복해서 알려줘야 하는 규칙을 저장해두는 용도다.
+  - Pi는 `AGENTS.md`와 `CLAUDE.md`를 자동으로 찾아 읽는다.
+  - 프로젝트 안에 두면 해당 workspace에만 적용되는 지시사항이 된다.
+  - 홈 디렉터리 쪽에 두면 모든 프로젝트에 적용되는 전역 지시사항이 된다.
+- `AGENTS.md`는 프로젝트 규칙을 알려줄 때 유용하다.
+  - 코드 스타일
+  - 자주 쓰는 명령
+  - 테스트 방식
+  - 파일 구조와 작업 관례
+- 전역 설정에는 모든 프로젝트에 적용되어도 안전한 내용만 넣는 것이 좋다.
+  - 개인 취향이나 일반적인 응답 방식은 전역에 둘 수 있다.
+  - 특정 프로젝트의 내부 규칙이나 민감한 정보는 workspace 쪽에 두는 편이 안전하다.
 - `.pi/SYSTEM.md`는 기본 정체성을 교체할 때 사용한다.
 - `.pi/APPEND_SYSTEM.md`는 기본 프롬프트 뒤에 추가 지시를 붙일 때 사용한다.
 
 ## Prompt templates
 
-- 반복해서 쓰는 요청은 prompt template로 만든다.
+- 반복해서 쓰는 요청은 prompt template로 만들 수 있다.
   - 코드 리뷰
   - 리팩터링
   - 이슈 분석
   - 테스트 보강
   - 문서화
-- template는 slash command처럼 사용할 수 있어 반복 작업을 줄여준다.
-- 전역 template는 `~/pi/agent/prompts`에 둔다.
+- Template는 slash command처럼 사용할 수 있어 반복 작업을 줄여준다.
+- 전역 template는 `~/.pi/agent/prompts`에 둔다.
 - 프로젝트별 template는 작업 폴더의 `.pi/prompts`에 둘 수 있다.
 - Pi에게 template 생성을 요청할 수도 있고, 다른 도구에서 쓰던 prompt를 옮겨올 수도 있다.
-  - 예: GitHub Copilot prompt template
+  - 예: GitHub Copilot prompt template를 Pi용 template로 옮기기
 - 예시
   - `.pi/prompts/review.md`
   - `Review $@ for bugs and missing tests.`
@@ -114,14 +124,14 @@ series = ["AI Agent"]
 
 ## Skills
 
-- skill은 재사용 가능한 능력 패키지에 가깝다.
+- Skill은 재사용 가능한 능력 패키지에 가깝다.
   - 특정 워크플로
   - setup 절차
   - 참고 문서
   - 스크립트 묶음
 - Pi는 skill의 설명을 먼저 보여주고, 필요할 때 전체 지시사항을 로드한다.
 - Pi는 여러 위치에서 skill을 찾는다.
-  - `~/pi/agent/skills`
+  - `~/.pi/agent/skills`
   - workspace-specific skills folder
   - cloud directory
 - 사용 예시
@@ -134,16 +144,16 @@ series = ["AI Agent"]
 
 ## Themes
 
-- theme는 Pi의 terminal UI를 바꾸는 설정이다.
+- Theme는 Pi의 terminal UI를 바꾸는 설정이다.
 - 기본적으로 dark theme와 light theme가 제공된다.
-- workspace에 맞는 custom theme를 만들거나 Pi에게 생성을 요청할 수 있다.
-- theme를 추가하거나 수정한 뒤에는 reload해야 settings에서 선택할 수 있다.
+- Workspace에 맞는 custom theme를 만들거나 Pi에게 생성을 요청할 수 있다.
+- Theme를 추가하거나 수정한 뒤에는 reload해야 settings에서 선택할 수 있다.
 
 ## Extensions
 
-- extension은 Pi를 진짜 내 에이전트처럼 바꾸는 핵심 확장 지점이다.
-- TypeScript 파일로 작성하며, 보통 `~/pi/agent/extensions`에 둔다.
-- 필요한 동작을 직접 추가할 수 있다.
+- Extension은 Pi를 내 워크플로에 맞게 바꾸는 핵심 확장 지점이다.
+- TypeScript 파일로 작성하며, 보통 `~/.pi/agent/extensions`에 둔다.
+- Extension으로는 필요한 동작을 직접 추가할 수 있다.
   - LLM이 호출할 수 있는 tool
   - 커스텀 `/slash` command
   - turn이나 tool 실행을 가로채는 event
@@ -154,19 +164,19 @@ series = ["AI Agent"]
   - `rm -rf`
   - `git push --force`
   - 이런 명령을 실행하기 전에 확인을 요구하도록 만들 수 있다.
-- custom welcome message처럼 UX 성격의 기능도 extension으로 만들 수 있다.
-- extension을 추가하거나 수정한 뒤에는 Pi를 재시작해야 로드된다.
+- Custom welcome message처럼 UX 성격의 기능도 extension으로 만들 수 있다.
+- Extension을 추가하거나 수정한 뒤에는 Pi를 재시작해야 로드된다.
 - Pi에 없는 기능은 부족함이라기보다 확장 지점으로 보는 편이 맞다.
 
 ## Packages
 
-- package는 extensions, skills, prompts를 하나로 묶어 설치할 수 있게 만든 단위다.
-- 커뮤니티가 만든 기능 묶음을 빠르게 추가할 수 있다.
+- Package는 extensions, skills, prompts를 하나로 묶어 설치할 수 있게 만든 단위다.
+- 커뮤니티가 만든 기능 묶음을 빠르게 추가할 때 유용하다.
   - sub-agent
   - MCP adapter
   - web search
   - context 관리 도구
-- package와 extension 예시는 공식 예제와 package gallery에서 찾을 수 있다.
+- Package와 extension 예시는 공식 예제와 package gallery에서 찾을 수 있다.
   - `https://github.com/earendil-works/pi/tree/main/packages/coding-agent/examples/extensions`
   - `https://pi.dev/packages`
 - 단, package에는 실행 가능한 코드가 포함될 수 있으므로 설치 전에 반드시 내용을 검토하는 것이 좋다.
@@ -183,10 +193,10 @@ series = ["AI Agent"]
   - `/clone`: 현재 branch 복제
   - `pi -c`: 마지막 session 계속하기
   - `pi -r`: resume picker 열기
-- context window 한계에 가까워지면 compact로 대화 기록을 압축할 수 있다.
-- session은 `~/pi/agent/sessions`에 저장되며, 시작된 directory 기준으로 정리된다.
+- Context window 한계에 가까워지면 compact로 대화 기록을 압축할 수 있다.
+- Session은 `~/.pi/agent/sessions`에 저장되며, 시작된 directory 기준으로 정리된다.
 - 대화는 JSONL 형식이라 백업과 분석이 쉽다.
-- session을 export하면 clean하고 검색 가능한 UI로 살펴볼 수 있다.
+- Session을 export하면 clean하고 검색 가능한 UI로 살펴볼 수 있다.
   - sidebar navigation
   - tool usage나 label 기준 filtering
   - review, 분석, fine-tuning 데이터 검토에 활용 가능
@@ -196,7 +206,7 @@ series = ["AI Agent"]
 
 ## 언제 무엇을 쓰면 좋은가
 
-- 가장 작은 레이어로 문제를 해결하는 것이 좋다.
+- 가능하면 가장 작은 레이어로 문제를 해결하는 것이 좋다.
   - 기본값 변경: `settings.json`
   - 프로젝트 규칙 전달: `AGENTS.md`
   - 에이전트 정체성 교체: `SYSTEM.md`
@@ -208,7 +218,8 @@ series = ["AI Agent"]
 ## 왜 Pi를 쓰는가
 
 - Pi의 장점은 통제감, 속도, 단순한 표면적이다.
-- 기본 기능이 적기 때문에 처음에는 비어 보일 수 있지만, 그만큼 내가 실제로 쓰는 방식에 맞춰 정확하게 만들 수 있다.
+- 기본 기능이 적기 때문에 처음에는 비어 보일 수 있다.
+- 하지만 그만큼 내가 실제로 쓰는 방식에 맞춰 정확하게 구성할 수 있다.
 - 매일 반복되는 작업이 보이면 그것을 Pi 위의 template, skill, extension, package로 올리는 것이 Pi다운 사용법이다.
 
 ## 참고 링크
