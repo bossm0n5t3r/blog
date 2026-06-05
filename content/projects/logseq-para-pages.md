@@ -1,5 +1,6 @@
 +++
 date = 2026-06-03T20:00:00+09:00
+lastmod = 2026-06-05
 title = "Logseq PARA Pages: Logseq에서 PARA 페이지를 빠르게 만드는 플러그인"
 authors = ["Ji-Hoon Kim"]
 tags = ["Logseq", "PARA", "Plugin", "Productivity", "TypeScript"]
@@ -49,6 +50,7 @@ Logseq PARA Pages의 핵심 기능은 다음과 같다.
 - `/para` slash command 제공
 - Project / Area / Resource / Archive 선택 UI 제공
 - 숫자 키 `1`, `2`, `3`, `4`로 빠른 카테고리 선택
+- 현재 페이지가 PARA 디렉토리 안에 있으면 해당 카테고리 자동 선택
 - 입력한 page name으로 PARA 디렉토리에 Markdown 파일 생성
 - 이미 존재하는 파일은 재사용
 - Logseq가 기본 `pages` 디렉토리에 먼저 만든 페이지 파일이 있으면 PARA 디렉토리로 이동 시도
@@ -65,7 +67,9 @@ Logseq PARA Pages의 핵심 기능은 다음과 같다.
 
 명령어 목록에서 **PARA: Create Page**를 선택하면 카테고리 선택 모달이 열린다.
 
-여기서 원하는 PARA 카테고리를 선택한다.
+여기서 원하는 PARA 카테고리를 선택한다. 현재 페이지가 `01-projects`, `02-areas`, `03-resources`, `04-archive` 같은 PARA 디렉토리 안에 있으면 해당 카테고리가 자동 선택되고, 페이지 이름 입력 단계로 바로 이동한다.
+
+자동 선택된 카테고리를 바꾸고 싶으면 **Change category**를 누르면 된다.
 
 - `1` = Project
 - `2` = Area
@@ -75,7 +79,11 @@ Logseq PARA Pages의 핵심 기능은 다음과 같다.
 
 ![PARA 카테고리 선택](/images/projects/logseq-para-pages/command-1.png)
 
-카테고리를 선택하면 페이지 이름을 입력하는 화면이 나온다.
+현재 페이지 위치를 기준으로 카테고리가 자동 선택되면 아래처럼 표시된다.
+
+![현재 위치 기반 PARA 카테고리 자동 선택](/images/projects/logseq-para-pages/command-5.png)
+
+카테고리를 선택하거나 자동 선택된 카테고리를 그대로 사용하면 페이지 이름을 입력하는 화면이 나온다.
 
 ![페이지 이름 입력](/images/projects/logseq-para-pages/command-2.png)
 
@@ -101,14 +109,16 @@ Logseq PARA Pages의 핵심 기능은 다음과 같다.
 
 기본 설정 기준으로 각 카테고리는 다음 디렉토리에 매핑된다.
 
-| 선택     | 생성 위치                   | 삽입 링크       |
-| -------- | --------------------------- | --------------- |
-| Project  | `01-projects/page-name.md`  | `[[page-name]]` |
-| Area     | `02-areas/page-name.md`     | `[[page-name]]` |
-| Resource | `03-resources/page-name.md` | `[[page-name]]` |
-| Archive  | `04-archive/page-name.md`   | `[[page-name]]` |
+| 선택     | 입력 page name | 생성/이동 대상 파일           | 삽입 링크         |
+| -------- | -------------- | ----------------------------- | ----------------- |
+| Project  | `my-project`   | `01-projects/my-project.md`   | `[[my-project]]`  |
+| Area     | `my-area`      | `02-areas/my-area.md`         | `[[my-area]]`     |
+| Resource | `my-resource`  | `03-resources/my-resource.md` | `[[my-resource]]` |
+| Archive  | `old-page`     | `04-archive/old-page.md`      | `[[old-page]]`    |
 
 중요한 점은 링크 자체는 `[[resource/my-resource]]` 같은 네임스페이스 링크가 아니라, 일반적인 `[[my-resource]]` 형태라는 점이다. 파일은 PARA 디렉토리에 정리하되, Logseq 안에서는 평범한 페이지 링크처럼 사용할 수 있게 했다.
+
+`name.md`처럼 `.md` 확장자를 입력해도 파일명과 링크명에서는 제거된다.
 
 ## 설정
 
