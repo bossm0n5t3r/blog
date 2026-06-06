@@ -1,6 +1,6 @@
 +++
 date = 2026-06-03T20:00:00+09:00
-lastmod = 2026-06-05
+lastmod = 2026-06-06
 title = "Logseq PARA Pages: Logseq에서 PARA 페이지를 빠르게 만드는 플러그인"
 authors = ["Ji-Hoon Kim"]
 tags = ["Logseq", "PARA", "Plugin", "Productivity", "TypeScript"]
@@ -52,9 +52,11 @@ Logseq PARA Pages의 핵심 기능은 다음과 같다.
 - 숫자 키 `1`, `2`, `3`, `4`로 빠른 카테고리 선택
 - 현재 페이지가 PARA 디렉토리 안에 있으면 해당 카테고리 자동 선택
 - 입력한 page name으로 PARA 디렉토리에 Markdown 파일 생성
+- 생성/이동/기존 페이지에 `- metadata` 블록과 `para:: <kind>` 프로퍼티 추가
+- 이미 `para:: ...` 프로퍼티가 있으면 중복 추가하지 않음
 - 이미 존재하는 파일은 재사용
 - Logseq가 기본 `pages` 디렉토리에 먼저 만든 페이지 파일이 있으면 PARA 디렉토리로 이동 시도
-- 생성 후 현재 커서 위치에 `[[page-name]]` 링크 삽입
+- metadata가 Logseq에 인덱싱될 때까지 짧게 기다린 뒤 현재 커서 위치에 `[[page-name]]` 링크 삽입
 - PARA 디렉토리 이름 설정 가능
 
 ![PARA 카테고리 선택 화면](/images/projects/logseq-para-pages/command-1.png)
@@ -87,13 +89,21 @@ Logseq PARA Pages의 핵심 기능은 다음과 같다.
 
 ![페이지 이름 입력](/images/projects/logseq-para-pages/command-2.png)
 
-예를 들어 Project를 선택하고 `my-project`를 입력하면 플러그인은 다음 파일을 만든다.
+예를 들어 Project를 선택하고 `my-project`를 입력하면 플러그인은 다음 파일을 준비한다.
 
 ```text
 01-projects/my-project.md
 ```
 
-그리고 현재 커서 위치에는 다음 링크를 삽입한다.
+새로 생성된 파일에는 기본적으로 metadata 블록과 PARA 프로퍼티가 들어간다.
+
+```markdown
+- metadata
+  para:: project
+-
+```
+
+파일 준비 후 Logseq가 metadata 블록을 인식하면 현재 커서 위치에는 다음 링크를 삽입한다.
 
 ```text
 [[my-project]]
@@ -119,6 +129,8 @@ Logseq PARA Pages의 핵심 기능은 다음과 같다.
 중요한 점은 링크 자체는 `[[resource/my-resource]]` 같은 네임스페이스 링크가 아니라, 일반적인 `[[my-resource]]` 형태라는 점이다. 파일은 PARA 디렉토리에 정리하되, Logseq 안에서는 평범한 페이지 링크처럼 사용할 수 있게 했다.
 
 `name.md`처럼 `.md` 확장자를 입력해도 파일명과 링크명에서는 제거된다.
+
+이미 같은 파일이 있거나 Logseq 기본 `pages` 디렉토리에서 PARA 디렉토리로 이동된 파일도 `para:: ...` 프로퍼티가 없으면 자동으로 보강된다.
 
 ## 설정
 
@@ -192,9 +204,9 @@ bun build ./index.ts --outdir ./dist --target browser --format esm --sourcemap=e
 
 ## 구현에서 신경 쓴 부분
 
-이 플러그인은 단순히 파일을 새로 만드는 것뿐 아니라, 이미 존재하는 페이지도 고려한다.
+이 플러그인은 단순히 파일을 새로 만드는 것뿐 아니라, 이미 존재하는 페이지와 metadata 인덱싱까지 고려한다.
 
-예를 들어 Logseq가 먼저 `pages/my-project.md` 파일을 만든 상태라면, 플러그인은 해당 파일을 찾아 PARA 디렉토리로 옮기려고 시도한다.
+예를 들어 Logseq가 먼저 `pages/my-project.md` 파일을 만든 상태라면, 플러그인은 해당 파일을 찾아 PARA 디렉토리로 옮기려고 시도한다. 기존 파일을 재사용하거나 이동한 경우에도 `para:: ...` 프로퍼티가 없으면 metadata 블록을 보강하고, 이미 같은 프로퍼티가 있으면 중복으로 추가하지 않는다.
 
 또한 페이지 이름에 `.md` 확장자를 입력해도 링크와 파일명에서는 자연스럽게 제거된다.
 
@@ -205,6 +217,8 @@ bun build ./index.ts --outdir ./dist --target browser --format esm --sourcemap=e
 ```
 
 파일명으로 사용할 수 없는 문자는 `-`로 치환해 운영체제별 파일명 문제를 줄였다.
+
+`/para` 실행 후에는 `logseq.Editor.getPageBlocksTree()`로 metadata가 Logseq에 인덱싱됐는지 짧게 polling한다. 이 과정을 거친 뒤 링크를 삽입하기 때문에, 생성 직후에도 페이지의 `para:: <kind>` 프로퍼티를 Logseq가 안정적으로 인식할 수 있다. 개발자 콘솔에서는 `[logseq-para-pages] metadata ...` prefix가 붙은 로그로 이 과정을 확인할 수 있다.
 
 ## 마무리
 
