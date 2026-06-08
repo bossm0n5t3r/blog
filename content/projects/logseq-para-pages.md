@@ -1,6 +1,6 @@
 +++
 date = 2026-06-03T20:00:00+09:00
-lastmod = 2026-06-06
+lastmod = 2026-06-08
 title = "Logseq PARA Pages: Logseq에서 PARA 페이지를 빠르게 만드는 플러그인"
 authors = ["Ji-Hoon Kim"]
 tags = ["Logseq", "PARA", "Plugin", "Productivity", "TypeScript"]
@@ -14,7 +14,7 @@ Logseq를 오래 쓰다 보면 페이지가 점점 많아진다.
 
 그래서 만든 플러그인이 **Logseq PARA Pages**다.
 
-**Logseq PARA Pages**는 Logseq Desktop에서 `/para` slash command로 PARA 페이지를 만들고, 현재 커서 위치에 일반 Logseq 페이지 링크를 삽입해주는 플러그인이다. 파일은 PARA 디렉토리에 정리하되, Logseq 안에서는 `[[my-project]]` 같은 평범한 페이지 링크로 사용할 수 있게 하는 것이 핵심이다.
+**Logseq PARA Pages**는 Logseq Desktop에서 `/para` slash command로 PARA 페이지를 만들고, 현재 커서 위치에 일반 페이지 링크를 삽입해주는 플러그인이다. 파일은 PARA 디렉토리에 정리하되, Logseq 안에서는 `[[my-project]]` 같은 평범한 페이지 링크로 사용할 수 있게 하는 것이 핵심이다.
 
 ![Logseq PARA Pages 사용 화면](/images/projects/logseq-para-pages/command-1.png)
 
@@ -43,16 +43,15 @@ Logseq는 기본적으로 페이지를 만들면 그래프의 `pages` 디렉토�
 
 ## 주요 기능
 
-- `/para` slash command 전용 제공
-- Project / Area / Resource / Archive 선택 UI 제공
-- 숫자 키 `1`, `2`, `3`, `4`로 빠른 PARA 카테고리 선택
+- `/para` slash command로 PARA 페이지 생성
+- Project / Area / Resource / Archive 카테고리 선택 UI 제공
+- 숫자 키 `1`, `2`, `3`, `4`로 빠른 카테고리 선택
 - 현재 페이지가 PARA 디렉토리 안에 있으면 해당 카테고리 자동 선택
-- 입력한 page name으로 PARA 디렉토리에 Markdown 파일 생성
-- 생성/이동/기존 페이지에 `- metadata` 블록과 `- para:: <kind>` 프로퍼티 추가
-- 이미 `- para:: ...` 프로퍼티가 있으면 중복 추가하지 않음
-- 이미 존재하는 파일은 재사용
-- Logseq가 기본 `pages` 디렉토리에 먼저 만든 페이지 파일이 있으면 PARA 디렉토리로 이동 시도
-- metadata가 Logseq에 인덱싱될 때까지 짧게 기다린 뒤 현재 커서 위치에 `[[page-name]]` 링크 삽입
+- 선택한 카테고리의 PARA 디렉토리에 Markdown 파일 생성
+- 생성/이동/기존 페이지에 `para:: <kind>` 페이지 프로퍼티 추가
+- 이미 `para:: ...` 프로퍼티가 있으면 중복 추가하지 않음
+- Logseq 기본 `pages` 디렉토리에 먼저 생성된 파일이 있으면 PARA 디렉토리로 이동 시도
+- 페이지의 Logseq 인덱싱을 짧게 기다린 뒤 현재 커서 위치에 `[[page-name]]` 링크 삽입
 - PARA 디렉토리 이름 설정 가능
 
 ## 사용 방법
@@ -81,15 +80,14 @@ Logseq는 기본적으로 페이지를 만들면 그래프의 `pages` 디렉토�
 
 ![페이지 이름 입력](/images/projects/logseq-para-pages/command-2.png)
 
-예를 들어 Project를 선택하고 `my-project`를 입력하면 플러그인은 `01-projects/my-project.md` 파일을 준비한다. 새로 생성된 파일에는 기본적으로 metadata 블록과 PARA 프로퍼티가 들어간다.
+예를 들어 Project를 선택하고 `my-project`를 입력하면 플러그인은 `01-projects/my-project.md` 파일을 준비한다. 새로 생성된 파일에는 기본적으로 PARA 페이지 프로퍼티가 들어간다.
 
-```markdown
-- metadata
-  - para:: project
+```text
+para:: project
 -
 ```
 
-파일 준비 후 Logseq가 metadata 블록을 인식하면 현재 커서 위치에는 일반 페이지 링크가 삽입된다.
+페이지가 준비되고 Logseq 인덱싱을 짧게 기다린 뒤 현재 커서 위치에는 일반 페이지 링크가 삽입된다.
 
 ```text
 [[my-project]]
@@ -105,18 +103,18 @@ Command Palette 방식은 사용하지 않는다. 현재는 `/para` slash comman
 
 기본 설정 기준으로 각 카테고리는 다음 디렉토리에 매핑된다.
 
-| 선택     | 입력 page name | 생성/이동 대상 파일           | 삽입 링크         |
-| -------- | -------------- | ----------------------------- | ----------------- |
-| Project  | `my-project`   | `01-projects/my-project.md`   | `[[my-project]]`  |
-| Area     | `my-area`      | `02-areas/my-area.md`         | `[[my-area]]`     |
-| Resource | `my-resource`  | `03-resources/my-resource.md` | `[[my-resource]]` |
-| Archive  | `old-page`     | `04-archive/old-page.md`      | `[[old-page]]`    |
+| 선택     | 입력 page name | 생성/이동 대상 파일           | 삽입 링크         | 추가 프로퍼티     |
+| -------- | -------------- | ----------------------------- | ----------------- | ----------------- |
+| Project  | `my-project`   | `01-projects/my-project.md`   | `[[my-project]]`  | `para:: project`  |
+| Area     | `my-area`      | `02-areas/my-area.md`         | `[[my-area]]`     | `para:: area`     |
+| Resource | `my-resource`  | `03-resources/my-resource.md` | `[[my-resource]]` | `para:: resource` |
+| Archive  | `old-page`     | `04-archive/old-page.md`      | `[[old-page]]`    | `para:: archive`  |
 
 중요한 점은 링크 자체는 `[[resource/my-resource]]` 같은 네임스페이스 링크가 아니라, 일반적인 `[[my-resource]]` 형태라는 점이다. 파일은 PARA 디렉토리에 정리하되, Logseq 안에서는 평범한 페이지 링크처럼 사용할 수 있게 했다.
 
 `name.md`처럼 `.md` 확장자를 입력해도 파일명과 링크명에서는 제거된다.
 
-이미 같은 파일이 있거나 Logseq 기본 `pages` 디렉토리에서 PARA 디렉토리로 이동된 파일도 `- para:: ...` 프로퍼티가 없으면 자동으로 보강된다.
+이미 같은 파일이 있거나 Logseq 기본 `pages` 디렉토리에서 PARA 디렉토리로 이동된 파일도 `para:: ...` 프로퍼티가 없으면 자동으로 보강된다.
 
 ## 설정
 
@@ -148,7 +146,7 @@ bun install
 bun run build
 ```
 
-`index.html`은 `dist/index.js`를 로드한다. 소스 변경 후 Logseq에서 다시 확인하기 전에는 `bun run build`를 실행해야 한다.
+`index.html`은 `dist/index.js`를 로드한다. 소스 변경 후 Logseq에서 다시 확인하려면 `bun run build`를 실행한 뒤 플러그인을 reload해야 한다.
 
 그 다음 Logseq Desktop 설정의 `Advanced`에서 **Developer mode**를 활성화한다.
 
@@ -173,9 +171,9 @@ bun run build
 
 빌드 후 Logseq에서 이 프로젝트 폴더를 플러그인으로 로드하면 된다. 코드 변경사항을 Logseq에 반영하려면 다시 빌드한 뒤 플러그인을 reload해야 한다.
 
-metadata Markdown 생성/수정 로직은 `src/para-metadata.ts`에 있다. 새 파일뿐 아니라 기존 파일이나 `pages` 디렉토리에서 이동된 파일에도 `- para:: <kind>` 프로퍼티를 보강한다.
+PARA 프로퍼티 Markdown 생성/수정 로직은 `src/para-metadata.ts`에 있다. 새 파일뿐 아니라 기존 파일이나 `pages` 디렉토리에서 이동된 파일에도 `para:: <kind>` 프로퍼티를 보강한다.
 
-또한 `/para` 실행 후에는 `logseq.Editor.getPageBlocksTree()`로 metadata가 Logseq에 인덱싱됐는지 짧게 polling한다. 이 과정을 거친 뒤 링크를 삽입하기 때문에 생성 직후에도 페이지의 `- para:: <kind>` 프로퍼티를 Logseq가 안정적으로 인식할 수 있다. 개발자 콘솔에서는 `[logseq-para-pages] metadata ...` prefix가 붙은 로그로 이 과정을 확인할 수 있다.
+또한 `/para` 실행 후에는 `logseq.Editor.getPageBlocksTree()`로 페이지가 Logseq에 인덱싱됐는지 짧게 polling한다. 이 과정을 거친 뒤 링크를 삽입해, 생성 직후 Logseq가 페이지를 인식할 시간을 확보한다. 개발자 콘솔에서는 `[logseq-para-pages] page ...` prefix가 붙은 로그로 이 과정을 확인할 수 있다.
 
 ## 마무리
 
