@@ -1,0 +1,6 @@
+{
+  "title": "harness-engineering-for-coding-agent-users",
+  "key": "harness-engineering-for-coding-agent-users",
+  "summary": "- 코딩 에이전트는 비결정적이며 조직 맥락을 이해하지 못해 결과 검증 책임은 사람에게 남는다.  \n- 하네스 엔지니어링은 모델 외부의 가이드와 센서로 결과 품질을 예측 가능하고 관리 가능하게 만드는 설계 과정이다.  \n- 가이드는 에이전트 행동 전 방향을 잡아주고, 센서는 행동 후 결과를 관찰해 수정 신호를 제공한다.  \n- 제어 방식은 빠르고 결정적인 computational control과 의미 판단이 필요한 inferential control로 나뉘며, 두 방식을 적절히 조합해야 한다.  \n- 하네스는 반복 개선이 필수이며, 문제 발생 시 규칙 추가, 테스트 강화, 피드백 메시지 개선 등으로 품질을 높여야 한다.  \n- 코딩 에이전트 품질은 모델 성능뿐 아니라 하네스 설계에 달려 있으며, computational control 우선 적용과 지속적 개선이 중요하다.",
+  "updatedAt": "2026-06-17T05:00:00.344Z"
+}
