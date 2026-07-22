@@ -41,7 +41,9 @@ categories = ["Kotlin", "HTML"]
 
 ## 바로 실행할 수 있는 사용 예
 
-`readability4k` 는 HTTP 요청을 직접 수행하지 않는다. HTML 을 가져온 뒤 원본 URL 과 함께 `DOMParser` 에 넘기는 방식이다. Gradle 설정에 Maven Central 과 라이브러리를 추가한다.
+`readability4k` 는 HTTP 요청을 직접 수행하지 않는다. HTML 을 가져온 뒤 원본 URL 과 함께 `DOMParser` 에 넘기는 방식이다.
+
+Gradle 설정에 Maven Central 과 라이브러리를 추가한다.
 
 ```kotlin
 repositories {
@@ -49,11 +51,11 @@ repositories {
 }
 
 dependencies {
-    implementation("com.m0n5t3r.boss:readability4k:1.0.1")
+    implementation("com.m0n5t3r.boss:readability4k:1.1.0")
 }
 ```
 
-프로젝트는 JDK 25 toolchain 으로 빌드한다. 아래 예제는 JDK 의 `HttpClient` 로 테스트 URL 을 가져와 바로 본문을 추출한다.
+빌드와 게시 바이트코드의 기준선 및 최소 런타임은 Java 17 이다. 아래 예제는 JDK 의 `HttpClient` 로 테스트 URL 을 가져와 바로 본문을 추출한다.
 
 ```kotlin
 import com.m0n5t3r.boss.readability4k.Readability
@@ -94,6 +96,17 @@ fun main() {
 ```
 
 `parse()` 는 입력 `Document` 를 변형하며, 읽을 만한 본문을 찾지 못하면 `null` 을 반환한다. 원본 DOM 을 이후에도 보존해야 한다면 호출 전에 별도 문서로 파싱해야 한다.
+
+## 런타임과 로깅
+
+라이브러리는 런타임에 `org.slf4j:slf4j-api` 만 의존하며, SLF4J provider 는 포함하지 않는다. 애플리케이션은 선택한 호환 provider 를 직접 추가하고 구성해야 하며, `logback-classic` 이 전이 의존성으로 제공된다고 가정해서는 안 된다.
+
+- `INFO`: 최소한의 parse lifecycle 정보
+- `DEBUG`: 내부 traversal, 후보 점수, node 제거 판단
+- `WARN`: 복구 가능한 HTML parser 및 JSON-LD 실패
+- `ERROR`: 복구할 수 없는 실패
+
+article HTML, `innerHTML`, `outerHTML`, 전체 DOM 직렬화는 어떤 로그 레벨에서도 라이브러리 logger 로 출력하지 않는다.
 
 ## 결과로 얻는 값
 
