@@ -39,24 +39,59 @@ categories = ["Kotlin", "HTML"]
 
 이 선택에는 비용도 있다. HTML 파싱, 엔티티, URI, namespace, DOM mutation 의 예외 처리를 라이브러리가 책임져야 한다. 대신 외부 HTML 파서의 동작 변경으로 추출 결과가 달라지는 범위를 줄이고, Mozilla 의 회귀 테스트와 결과를 더 직접적으로 비교할 수 있다.
 
-## 가장 작은 사용 예
+## 바로 실행할 수 있는 사용 예
 
-HTML 을 가져오는 일은 호출자 책임이다. 가져온 원문과 원본 URL 을 `DOMParser` 에 넘기고, 그 결과를 `Readability` 에 전달한다.
+`readability4k` 는 HTTP 요청을 직접 수행하지 않는다. HTML 을 가져온 뒤 원본 URL 과 함께 `DOMParser` 에 넘기는 방식이다. Gradle 설정에 Maven Central 과 라이브러리를 추가한다.
+
+```kotlin
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("com.m0n5t3r.boss:readability4k:1.0.1")
+}
+```
+
+프로젝트는 JDK 25 toolchain 으로 빌드한다. 아래 예제는 JDK 의 `HttpClient` 로 테스트 URL 을 가져와 바로 본문을 추출한다.
 
 ```kotlin
 import com.m0n5t3r.boss.readability4k.Readability
 import com.m0n5t3r.boss.readability4k.dom.DOMParser
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+import java.time.Duration
 
-val document = DOMParser().parse(html, "https://example.com/article")
-val article = Readability(document).parse()
-    ?: error("No readable article found")
+fun main() {
+    val url = "https://tinkering.xyz/bedctl/"
+    val httpClient =
+        HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(10))
+            .followRedirects(HttpClient.Redirect.NORMAL)
+            .build()
+    val request =
+        HttpRequest.newBuilder(URI.create(url))
+            .timeout(Duration.ofSeconds(20))
+            .header("User-Agent", "readability4k-example/1.0")
+            .GET()
+            .build()
+    val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
 
-println(article.title)
-println(article.content)
-println(article.textContent)
+    check(response.statusCode() in 200..299) {
+        "Unexpected HTTP status: ${response.statusCode()}"
+    }
+
+    val document = DOMParser().parse(response.body(), url)
+    val article = Readability(document).parse()
+        ?: error("No readable article found")
+
+    println(article.title)
+    println(article.content)
+    println(article.textContent)
+}
 ```
-
-두 번째 인자인 URL 은 선택 사항이지만, 실제 페이지를 처리할 때는 넣는 편이 좋다. 상대 링크와 미디어 URL 을 기준 URL 에 맞춰 절대 URL 로 보정하는 데 사용한다.
 
 `parse()` 는 입력 `Document` 를 변형하며, 읽을 만한 본문을 찾지 못하면 `null` 을 반환한다. 원본 DOM 을 이후에도 보존해야 한다면 호출 전에 별도 문서로 파싱해야 한다.
 
@@ -79,7 +114,7 @@ println(article.textContent)
 
 ## 기본값을 바꿔야 할 때
 
-원본 알고리즘의 주요 조절 지점은 `ReadabilityOptions` 로 노출한다.
+원본 알고리즘의 주요 조절 지점은 `ReadabilityOptions` 로 노출한다. 위 예제의 `Readability(document).parse()` 호출을 아래 코드로 바꾸고, 파일 상단에 `ReadabilityOptions` import 를 추가하면 된다.
 
 ```kotlin
 import com.m0n5t3r.boss.readability4k.ReadabilityOptions
@@ -90,7 +125,6 @@ val article = Readability(
         maxElemsToParse = 10_000,
         charThreshold = 200,
         classesToPreserve = listOf("caption"),
-        keepClasses = true,
         disableJSONLD = false,
         allowedVideoRegex = Regex("https://video.example.com/.*"),
     ),
@@ -99,7 +133,8 @@ val article = Readability(
 
 - `maxElemsToParse`: 지나치게 큰 문서를 처리하기 전에 제한한다. 초과하면 예외로 중단한다.
 - `charThreshold`: 본문으로 채택할 최소 텍스트 길이를 조절한다.
-- `classesToPreserve`, `keepClasses`: 후처리에서 유지할 CSS class 를 제어한다.
+- `classesToPreserve`: class 정리 과정에서 유지할 CSS class 를 지정한다.
+- `keepClasses`: `true` 로 설정하면 class 정리 없이 기존 class 를 모두 보존한다.
 - `allowedVideoRegex`: 본문 안에 보존할 iframe 동영상 URL 규칙을 바꾼다.
 - `serializer`: 추출한 DOM 을 문자열로 직렬화하는 방식을 교체할 수 있다.
 
