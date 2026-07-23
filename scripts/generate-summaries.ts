@@ -82,14 +82,14 @@ const openai = new OpenAI({
 });
 
 // ====== 유틸 ======
-function toKeyFromRelPath(relPath: string) {
+const toKeyFromRelPath = (relPath: string) => {
   let p = relPath.replace(/\\/g, "/");
   p = p.replace(/\/index\.md$/, ""); // leaf bundle
   p = p.replace(/\.md$/, "");
   return p.replace(/\//g, "-");
 }
 
-function clampText(text: string, maxChars = MAX_INPUT_CHARS) {
+const clampText = (text: string, maxChars = MAX_INPUT_CHARS) => {
   const normalized = text.replace(/\s+/g, " ").trim();
   return normalized.length > maxChars
     ? normalized.slice(0, maxChars) + "\n\n(이하 생략)"
@@ -97,7 +97,7 @@ function clampText(text: string, maxChars = MAX_INPUT_CHARS) {
 }
 
 // prefix 기반 제외 로직
-function shouldSkipFile(relPath: string) {
+const shouldSkipFile = (relPath: string) => {
   const p = relPath.replace(/\\/g, "/");
   const segments = p.split("/");
   const baseName = segments[segments.length - 1];
@@ -109,12 +109,12 @@ function shouldSkipFile(relPath: string) {
   );
 }
 
-function normalizeTarget(target: string) {
+const normalizeTarget = (target: string) => {
   const trimmed = target.trim().replace(/\\/g, "/");
   return trimmed.replace(/^\.\//, "");
 }
 
-function matchesOnlyTarget(file: string, key: string) {
+const matchesOnlyTarget = (file: string, key: string) => {
   if (ONLY.length === 0) return true;
 
   const normalizedFile = normalizeTarget(file);
@@ -128,7 +128,7 @@ function matchesOnlyTarget(file: string, key: string) {
   return false;
 }
 
-async function aiSummarize(text: string, title: string) {
+const aiSummarize = async (text: string, title: string) => {
   const input = clampText(text);
 
   const prompt = `
@@ -164,7 +164,7 @@ ${input}
   return summary;
 }
 
-async function main() {
+const main = async () => {
   if (!process.env.OPENAI_API_KEY) {
     console.error("❌ OPENAI_API_KEY is not set. Put it in .env");
     process.exit(1);
