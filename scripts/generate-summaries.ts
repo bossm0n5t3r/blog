@@ -1,9 +1,9 @@
+import "dotenv/config";
+import glob from "fast-glob";
+import matter from "gray-matter";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import "dotenv/config";
 import OpenAI from "openai";
-import matter = require("gray-matter");
-import glob = require("fast-glob");
 
 const POSTS_DIR = path.join(process.cwd(), "content/posts");
 const SUMMARY_DIR = path.join(process.cwd(), "data/summaries");
@@ -19,7 +19,9 @@ const FORCE = process.env.FORCE_SUMMARY === "1";
 // 예: pnpm summary -- --only=hello-world
 const ONLY = (() => {
   if (process.env.SUMMARY_ONLY) {
-    return process.env.SUMMARY_ONLY.split(",").map(s => s.trim()).filter(Boolean);
+    return process.env.SUMMARY_ONLY.split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
   }
 
   const args = process.argv.slice(2);
@@ -44,20 +46,22 @@ const ONLY = (() => {
   }
 
   return values
-  .flatMap(value => value.split(","))
-  .map(s => s.trim())
-  .filter(Boolean);
+    .flatMap((value) => value.split(","))
+    .map((s) => s.trim())
+    .filter(Boolean);
 })();
 
 // 1) 제외할 파일 prefix들
 const DEFAULT_EXCLUDE_PREFIXES = [
-  "_",          // 예: _draft.md, _private/...
-  "draft-",     // 예: draft-hello.md
-  "wip-",       // 예: wip-k8s.md
+  "_", // 예: _draft.md, _private/...
+  "draft-", // 예: draft-hello.md
+  "wip-", // 예: wip-k8s.md
 ];
 
 const EXCLUDE_PREFIXES = process.env.SUMMARY_EXCLUDE_PREFIXES
-  ? process.env.SUMMARY_EXCLUDE_PREFIXES.split(",").map(s => s.trim()).filter(Boolean)
+  ? process.env.SUMMARY_EXCLUDE_PREFIXES.split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
   : DEFAULT_EXCLUDE_PREFIXES;
 
 // 2) 본문 길이 제한 (너무 길면 입력 토큰 과금/실패 위험)
@@ -68,7 +72,9 @@ const MODEL = process.env.SUMMARY_MODEL ?? "gpt-4.1-mini";
 const TEMPERATURE = Number(process.env.SUMMARY_TEMPERATURE ?? "0.2");
 
 // ★ 끊김 방지를 위해 기본값을 800으로 상향
-const MAX_OUTPUT_TOKENS = Number(process.env.SUMMARY_MAX_OUTPUT_TOKENS ?? "800");
+const MAX_OUTPUT_TOKENS = Number(
+  process.env.SUMMARY_MAX_OUTPUT_TOKENS ?? "800",
+);
 
 // ====== OpenAI 클라이언트 ======
 const openai = new OpenAI({
@@ -98,8 +104,8 @@ function shouldSkipFile(relPath: string) {
 
   if (baseName === "_index.md") return true;
 
-  return segments.some(seg =>
-    EXCLUDE_PREFIXES.some(prefix => seg.startsWith(prefix))
+  return segments.some((seg) =>
+    EXCLUDE_PREFIXES.some((prefix) => seg.startsWith(prefix)),
   );
 }
 
@@ -112,11 +118,7 @@ function matchesOnlyTarget(file: string, key: string) {
   if (ONLY.length === 0) return true;
 
   const normalizedFile = normalizeTarget(file);
-  const candidates = new Set([
-    normalizedFile,
-    `posts/${normalizedFile}`,
-    key,
-  ]);
+  const candidates = new Set([normalizedFile, `posts/${normalizedFile}`, key]);
 
   for (const rawTarget of ONLY) {
     const target = normalizeTarget(rawTarget);
