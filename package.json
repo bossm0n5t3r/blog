@@ -1,5 +1,5 @@
 {
-  "name": "bossm0n5t3r.github.io",
+  "name": "blog",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,7 @@
     "build": "pnpm summary && hugo"
   },
   "keywords": [],
-  "author": "",
+  "author": "bossm0n5t3r",
   "license": "ISC",
   "packageManager": "pnpm@10.23.0",
   "devDependencies": {
