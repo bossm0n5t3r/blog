@@ -80,7 +80,7 @@ lineNoStart = 1
 lineNos = true
 lineNumbersInTable = true
 noClasses = true
-style = 'github-dark'
+style = 'catppuccin-mocha'
 tabWidth = 4
 
 [markup]
