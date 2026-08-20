@@ -6,7 +6,7 @@
     "esModuleInterop": true,
     "strict": false,
     "skipLibCheck": true,
-    "noEmit": true,
+    "noEmit": true
   },
-  "include": ["scripts/**/*.ts"],
+  "include": ["scripts/**/*.ts"]
 }

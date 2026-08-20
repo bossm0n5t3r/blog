@@ -22,9 +22,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 중복 버튼 생성 방지
     const prevSibling = highlight.previousSibling;
-    if (prevSibling &&
-        prevSibling.nodeType === 1 &&
-        prevSibling.classList.contains('code-copy-container')) {
+    if (
+      prevSibling &&
+      prevSibling.nodeType === 1 &&
+      prevSibling.classList.contains('code-copy-container')
+    ) {
       return;
     }
 
@@ -43,24 +45,24 @@ document.addEventListener('DOMContentLoaded', function () {
     codeCopyButton.addEventListener('click', function () {
       const codeContent = highlight.querySelector('td.code');
       const code = codeContent
-          ? codeContent.textContent
-          : codeBlock.textContent;
+        ? codeContent.textContent
+        : codeBlock.textContent;
 
       // 클립보드 API 사용 가능 여부 확인
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(code).then(
-            function () {
-              codeCopyButton.innerText = 'Copied!';
-              setTimeout(function () {
-                codeCopyButton.innerText = 'Copy';
-              }, 2000);
-            },
-            function () {
-              codeCopyButton.innerText = 'Error';
-              setTimeout(function () {
-                codeCopyButton.innerText = 'Copy';
-              }, 2000);
-            },
+          function () {
+            codeCopyButton.innerText = 'Copied!';
+            setTimeout(function () {
+              codeCopyButton.innerText = 'Copy';
+            }, 2000);
+          },
+          function () {
+            codeCopyButton.innerText = 'Error';
+            setTimeout(function () {
+              codeCopyButton.innerText = 'Copy';
+            }, 2000);
+          },
         );
       } else {
         // 대체 방법 (구형 브라우저용)
