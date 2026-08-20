@@ -7,7 +7,7 @@ body {
   max-width: 800px;
   margin: 50px auto;
   padding: 0 10px;
-  font: 14px/1.5 monospace;
+  font: 17px/1.5 monospace;
 }
 
 header {
@@ -40,6 +40,22 @@ figcaption {
   color: #888;
   font: 12px/1.5 monospace;
   text-align: center;
+}
+
+blockquote {
+  margin: 1.5rem 0;
+  padding: 0.85rem 1rem;
+  border-left: 4px solid #555;
+  background-color: #f5f6f7;
+  color: #333;
+}
+
+blockquote > :first-child {
+  margin-top: 0;
+}
+
+blockquote > :last-child {
+  margin-bottom: 0;
 }
 
 .highlight {
