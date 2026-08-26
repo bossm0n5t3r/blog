@@ -172,7 +172,7 @@ val article = Readability(
 
 ![Mozilla Readability, readability4k, Sermilion readability4k 비교 화면](/images/projects/readability4k/0.png)
 
-아직 버그가 있을 수 있다. 기대와 다른 결과를 발견했다면 재현할 URL 과 기대 결과를 함께 [Codeberg issue](https://codeberg.org/bossm0n5t3r/readability4k/issues) 또는 [이메일](mailto:bossm0n5t3r@gmail.com)로 알려주면 고맙겠다.
+아직 버그가 있을 수 있다. 기대와 다른 결과를 발견했다면 재현할 URL 과 기대 결과를 함께 [Codeberg issue](https://codeberg.org/bossm0n5t3r/readability4k/issues) 또는 [이메일](mailto:hello@m0n5t3r.com)로 알려주면 고맙겠다.
 
 ## 추출 결과는 sanitizer 가 아니다
 

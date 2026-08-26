@@ -14,4 +14,4 @@ slug = "about"
   - 테스트 코드를 즐겨 작성함
 - LLM 에 관심이 많음
 - Contact
-  - bossm0n5t3r@gmail.com
+  - hello@m0n5t3r.com
