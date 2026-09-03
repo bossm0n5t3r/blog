@@ -2,5 +2,14 @@
   "tabWidth": 2,
   "useTabs": false,
   "singleQuote": true,
-  "trailingComma": "all"
+  "trailingComma": "all",
+  "plugins": ["prettier-plugin-go-template"],
+  "overrides": [
+    {
+      "files": ["themes/private/layouts/**/*.html"],
+      "options": {
+        "parser": "go-template"
+      }
+    }
+  ]
 }

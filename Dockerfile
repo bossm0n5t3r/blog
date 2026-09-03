@@ -12,8 +12,7 @@ COPY . .
 
 # Install dependencies and build
 RUN pnpm install --frozen-lockfile \
-    && hugo --gc --minify \
-    && npx pagefind --source "public"
+    && pnpm build
 
 # Production stage
 FROM nginx:stable-alpine
