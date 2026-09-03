@@ -1,24 +1,21 @@
-{{ strings.Repeat ( .Site.Title | len | add 6 ) "=" }}<br>
-== <a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a> ==<br>
+{{ strings.Repeat ( .Site.Title | len | add 6 ) "=" }}<br />
+== <a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a> ==<br />
 {{ strings.Repeat ( .Site.Title | len | add 6 ) "=" }}
-<div style="float: right;">{{ .Site.Params.subtitle }}</div><br>
-<p>
+<div style="float: right;">{{ .Site.Params.subtitle }}</div>
+<br />
 <nav>
-    <a href="/"><b>Start</b></a>.
-    {{ with .Site.Menus.main }}
+  <a href="/"><b>Start.</b></a>
+  {{ with .Site.Menus.main }}
     {{ range . }}
-    <a href="{{ .URL | relURL }}"><b>{{ .Name }}</b></a>.
+      <a href="{{ .URL | relURL }}"><b>{{ .Name }}.</b></a>
     {{ end }}
+  {{ end }}
 </nav>
-</p>
-<p>
-  <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
-  <script src="/pagefind/pagefind-ui.js"></script>
-  <div id="search"></div>
-  <script>
-      window.addEventListener('DOMContentLoaded', (event) => {
-          new PagefindUI({ element: "#search", showSubResults: true });
-      });
-  </script>
-</p>
-{{ end }}
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+<script src="/pagefind/pagefind-ui.js"></script>
+<div id="search"></div>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    new PagefindUI({ element: '#search', showSubResults: true });
+  });
+</script>

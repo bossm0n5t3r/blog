@@ -41,6 +41,11 @@ header {
   margin-bottom: 1rem;
 }
 
+header nav,
+header #search {
+  margin-block: 1rem;
+}
+
 footer {
   border-top: 1px solid #222;
   margin-top: 1rem;

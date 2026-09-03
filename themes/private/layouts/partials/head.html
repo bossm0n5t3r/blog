@@ -16,9 +16,22 @@
   gtag('config', 'G-95QLXL4ME6');
 </script>
 
+<!-- GoatCounter -->
+<script
+  data-goatcounter="https://stats.m0n5t3r.com/count"
+  async
+  src="https://stats.m0n5t3r.com/count.js"
+></script>
+
 <title>
-  {{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title
-  site.Title }}{{ end }}
+  {{ if .IsHome }}
+    {{ site.Title }}
+  {{ else }}
+    {{ printf "%s | %s" .Title
+      site.Title
+    }}
+  {{ end }}
 </title>
-{{ partialCached "head/css.html" . }} {{ partialCached "head/js.html" . }} {{
-partialCached "head/custom-icons.html" . }}
+{{ partialCached "head/css.html" . }}
+{{ partialCached "head/js.html" . }}
+{{ partialCached "head/custom-icons.html" . }}
