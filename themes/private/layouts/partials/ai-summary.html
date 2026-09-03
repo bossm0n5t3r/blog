@@ -1,26 +1,27 @@
 {{/* posts 글에서만 요약 표시 */}}
 {{ if eq .Section "posts" }}
+  {{/* content/posts 상대경로 -> key 만들기 */}}
+  {{ $rel := replace .File.Path "\\" "/" }}
+  {{ $rel = replace $rel "posts/" "" }}
+  {{ $rel = replace $rel "/index.md" "" }}
+  {{ $rel = replace $rel ".md" "" }}
+  {{ $key := replace $rel "/" "-" }}
 
-{{/* content/posts 상대경로 -> key 만들기 */}}
-{{ $rel := replace .File.Path "\\" "/" }}
-{{ $rel = replace $rel "posts/" "" }}
-{{ $rel = replace $rel "/index.md" "" }}
-{{ $rel = replace $rel ".md" "" }}
-{{ $key := replace $rel "/" "-" }}
+  {{ $summary := index hugo.Data.summaries $key }}
 
-{{ $summary := index hugo.Data.summaries $key }}
-
-{{ if $summary }}
-<hr/>
-<section class="ai-summary">
-  <h2>AI Summary</h2>
-  <div class="ai-summary-body">
-    {{ $summary.summary | markdownify }}
-  </div>
-  <small>
-    Updated: {{ time $summary.updatedAt | dateFormat "2006-01-02 15:04" }} UTC
-  </small>
-</section>
-{{ end }}
+  {{ if $summary }}
+    <hr />
+    <section class="ai-summary">
+      <h2>AI Summary</h2>
+      <div class="ai-summary-body">
+        {{ $summary.summary | markdownify }}
+      </div>
+      <small>
+        Updated:
+        {{ time $summary.updatedAt | dateFormat "2006-01-02 15:04" }}
+        UTC
+      </small>
+    </section>
+  {{ end }}
 
 {{ end }}

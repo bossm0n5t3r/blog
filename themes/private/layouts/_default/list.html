@@ -1,19 +1,21 @@
 {{ define "main" }}
-{{ $pageTitle := .Title }}
+  {{ $pageTitle := .Title }}
 
-<h1>{{ .Title }}</h1>
-{{ .Content }}
 
-<ul>
-  {{ range .Pages }}
-  <li>
-    {{ if eq $pageTitle "Posts" }}
-    {{ .Date | time.Format site.Params.theme_config.date_format }} -
-    <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
-    {{ else }}
-    <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+
+
+  <ul>
+    {{ range .Pages }}
+      <li>
+        {{ if eq $pageTitle "Posts" }}
+          {{ .Date | time.Format site.Params.theme_config.date_format }} -
+          <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+        {{ else }}
+          <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+        {{ end }}
+      </li>
     {{ end }}
-  </li>
-  {{ end }}
-</ul>
+  </ul>
 {{ end }}

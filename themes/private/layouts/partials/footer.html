@@ -1,35 +1,47 @@
 <p>
-  &copy; {{ if (and .Site.Params.since (lt .Site.Params.since now.Year)) }} {{
-  .Site.Params.since }} - {{ end }} {{ now.Year }}
+  &copy;
+  {{ if (and .Site.Params.since (lt .Site.Params.since now.Year)) }}
+    {{ .Site.Params.since }} -
+  {{ end }}
+  {{ now.Year }}
   <a href="{{ .Site.BaseURL }}">
-    <b>{{ if .Site.Copyright }}{{ .Site.Copyright }}{{ else }}{{ .Site.Title }}{{ end }}</b>
-  </a>. {{- range .Site.Menus.footer }}
-  <a href="{{ .URL }}"><b>{{ .Name }}</b></a>. {{- end }}
+    <b
+      >{{ if .Site.Copyright }}
+        {{ .Site.Copyright }}
+      {{ else }}
+        {{ .Site.Title }}
+      {{ end }}</b
+    > </a
+  >.
+  {{- range .Site.Menus.footer }}
+    <a href="{{ .URL }}"><b>{{ .Name }}</b></a
+    >.
+  {{- end }}
 </p>
 
 <script type="module">
-  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
 
   document.addEventListener('DOMContentLoaded', () => {
     // 1) ```mermaid 코드블럭을 <div class="mermaid">로 변환
     document
-    .querySelectorAll('pre > code.language-mermaid, pre > code.mermaid')
-    .forEach((codeBlock) => {
-      const pre = codeBlock.parentElement;
-      const parent = pre.parentElement;
-      const mermaidCode = codeBlock.textContent;
+      .querySelectorAll('pre > code.language-mermaid, pre > code.mermaid')
+      .forEach((codeBlock) => {
+        const pre = codeBlock.parentElement;
+        const parent = pre.parentElement;
+        const mermaidCode = codeBlock.textContent;
 
-      const mermaidDiv = document.createElement('div');
-      mermaidDiv.className = 'mermaid';
-      mermaidDiv.textContent = mermaidCode.trim();
+        const mermaidDiv = document.createElement('div');
+        mermaidDiv.className = 'mermaid';
+        mermaidDiv.textContent = mermaidCode.trim();
 
-      parent.replaceChild(mermaidDiv, pre);
-    });
+        parent.replaceChild(mermaidDiv, pre);
+      });
 
     // 2) Mermaid 초기화 + 렌더
     mermaid.initialize({
-      startOnLoad: false,   // 우리가 직접 run() 호출할 거라 false
-      theme: 'default',     // 필요하면 'dark', 'forest' 등으로 변경
+      startOnLoad: false, // 우리가 직접 run() 호출할 거라 false
+      theme: 'default', // 필요하면 'dark', 'forest' 등으로 변경
     });
 
     mermaid.run();

@@ -1,7 +1,9 @@
-{{- if isset .Site.Params "giscus" -}} {{- if and (isset .Site.Params.giscus
-"repo") (not (eq .Site.Params.giscus.repo "" )) (eq (.Params.disableComments |
-default false) false) -}}
-<div class="comments">
+{{- if isset .Site.Params "giscus" -}}
+  {{- if and (isset .Site.Params.giscus
+    "repo") (not (eq .Site.Params.giscus.repo "" )) (eq (.Params.disableComments |
+    default false) false)
+  -}}
+    <div class="comments">
   <script>
     let getTheme =
       window.localStorage && window.localStorage.getItem('colorscheme');
@@ -43,5 +45,6 @@ default false) false) -}}
     document.querySelector('div.comments').innerHTML = '';
     document.querySelector('div.comments').appendChild(s);
   </script>
-</div>
-{{- end -}} {{- end -}}
+    </div>
+  {{- end -}}
+{{- end -}}
