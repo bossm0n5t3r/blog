@@ -10,7 +10,8 @@
     {{ range .Pages }}
       <li>
         {{ if eq $pageTitle "Posts" }}
-          {{ .Date | time.Format site.Params.theme_config.date_format }} -
+          {{ $date := .Date | time.Format site.Params.theme_config.date_format }}
+          <code>{{ $date }}</code> -
           <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
         {{ else }}
           <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
