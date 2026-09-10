@@ -1,0 +1,46 @@
+{{ define "main" }}
+  {{ $groups := site.Params.book_groups }}
+  {{ if not $groups }}
+    {{ errorf "params.book_groups must define the books list" }}
+  {{ end }}
+
+  {{ range $page := .Pages }}
+    {{ $matchCount := 0 }}
+    {{ range $group := $groups }}
+      {{ if strings.HasPrefix $page.File.ContentBaseName $group.prefix }}
+        {{ $matchCount = add $matchCount 1 }}
+      {{ end }}
+    {{ end }}
+    {{ if ne $matchCount 1 }}
+      {{ errorf "%q must match exactly one params.book_groups prefix" $page.File.Path }}
+    {{ end }}
+  {{ end }}
+
+
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+
+  {{ range $group := $groups }}
+    {{ $pages := slice }}
+    {{ range $page := $.Pages.ByDate }}
+      {{ if strings.HasPrefix $page.File.ContentBaseName $group.prefix }}
+        {{ $pages = $pages | append $page }}
+      {{ end }}
+    {{ end }}
+    {{ if eq (len $pages) 0 }}
+      {{ errorf "params.book_groups prefix %q does not match a book" $group.prefix }}
+    {{ end }}
+    <section>
+      <h2>{{ $group.title }}</h2>
+      <ul>
+        {{ range $page := $pages }}
+          <li>
+            <a href="{{ $page.RelPermalink }}">
+              {{- replaceRE `^\[[^]]+\]\s*` "" $page.LinkTitle -}}
+            </a>
+          </li>
+        {{ end }}
+      </ul>
+    </section>
+  {{ end }}
+{{ end }}

@@ -19,6 +19,22 @@ touchIcon = "images/favicon/apple-touch-icon.png"
 since = 2023
 katex = true
 
+[[params.book_groups]]
+title = "그림과 실습으로 배우는 쿠버네티스 입문"
+prefix = "bbf-k8s"
+
+[[params.book_groups]]
+title = "코틀린 아카데미: 핵심편"
+prefix = "kotlin-essentials"
+
+[[params.book_groups]]
+title = "코틀린 코루틴 (Kotlin Coroutines: Deep Dive)"
+prefix = "kotlin-coroutines"
+
+[[params.book_groups]]
+title = "클린 아키텍처: 소프트웨어 구조와 설계의 원칙"
+prefix = "clean-architecture"
+
 [params.theme_config]
 date_format = "2006-01-02"
 
