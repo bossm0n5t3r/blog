@@ -1,11 +1,11 @@
 name = 'Private'
 license = 'MIT'
-licenselink = 'https://codeberg.org/bossm0n5t3r/blog/src/branch/master/themes/private/LICENSE'
+licenselink = 'https://github.com/bossm0n5t3r/blog/blob/master/themes/private/LICENSE'
 description = 'An original Hugo theme created for The Archive'
-homepage = 'https://codeberg.org/bossm0n5t3r/blog'
+homepage = 'https://github.com/bossm0n5t3r/blog'
 tags = ['blog', 'personal', 'responsive']
 features = ['responsive', 'syntax-highlighting', 'math']
 
 [author]
 name = 'Ji-Hoon Kim'
-homepage = 'https://codeberg.org/bossm0n5t3r'
+homepage = 'https://github.com/bossm0n5t3r'
