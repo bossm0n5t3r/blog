@@ -1,5 +1,6 @@
 +++
 date = 2026-06-22T11:00:00+09:00
+lastmod = 2026-09-18
 title = "Git 커밋 메시지, 이제 diff만 보고 AI가 작성합니다: ACW 개발기"
 authors = ["Ji-Hoon Kim"]
 tags = ["ACW", "AI", "Git", "Python", "CLI", "LLM"]
@@ -13,10 +14,10 @@ series = []
 
 ACW는 Git diff를 수집해 LLM에 전달하고, 후보 커밋 메시지를 생성한 뒤, 필요하면 바로 `git commit`까지 이어줍니다. 원격 LLM뿐 아니라 Ollama, LM Studio 같은 로컬 provider도 지원해 민감한 코드베이스에서도 선택지를 가질 수 있게 했습니다.
 
-프로젝트는 PyPI와 Codeberg에서 확인할 수 있습니다.
+프로젝트는 PyPI와 GitHub에서 확인할 수 있습니다.
 
 - PyPI: <https://pypi.org/project/acw/>
-- Source: <https://codeberg.org/bossm0n5t3r/acw>
+- Source: <https://github.com/auto-commit-wizard/acw>
 
 ## ACW가 해결하려는 문제
 

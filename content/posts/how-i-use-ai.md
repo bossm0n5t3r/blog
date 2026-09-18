@@ -1,5 +1,6 @@
 +++
 date = 2026-08-10T23:00:00+09:00
+lastmod = 2026-09-18
 title = "나는 AI를 어떻게 쓰고 있는가"
 authors = ["Ji-Hoon Kim"]
 tags = ["AI", "Productivity", "Workflow"]
@@ -79,7 +80,7 @@ modelRoles:
 ```
 
 - 모델은 그때그때 바뀐다.
-- 현재 버전의 모델은 https://codeberg.org/bossm0n5t3r/dotfiles/src/branch/master/omp/.omp/agent/config.yml 를 참고하면 된다.
+- 현재 버전의 모델은 https://github.com/bossm0n5t3r/dotfiles/blob/master/omp/.omp/agent/config.yml 를 참고하면 된다.
 
 ## 마무리
 

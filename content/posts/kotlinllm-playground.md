@@ -1,5 +1,6 @@
 +++
 date = 2026-08-20T21:00:00+09:00
+lastmod = 2026-09-18
 title = "KotlinLLM Playground 만들기: asLlm()과 mockLlm() 실험해보기"
 authors = ["Ji-Hoon Kim"]
 tags = ["Kotlin", "KotlinLLM", "LLM", "JetBrains", "Playground"]
@@ -16,7 +17,7 @@ series = ["KotlinLLM Playground"]
 - 그런데 실제로 살펴보니 방향이 조금 달랐다.
 - KotlinLLM 은 LLM 에게 매번 결과를 요청하는 라이브러리라기보다, 프로그램 실행 중 필요한 Kotlin 구현을 LLM 으로 생성하는 실험적인 접근에 가까웠다.
 - 궁금해서 `asLlm()` 과 `mockLlm()` 을 직접 실행해볼 수 있는 간단한 playground 를 만들어봤다.
-  - [kotlinllm-playground](https://codeberg.org/bossm0n5t3r/kotlinllm-playground)
+  - [kotlinllm-playground](https://github.com/bossm0n5t3r/kotlinllm-playground)
 
 > `KotlinLLM` 은 현재 `JetBrains Research` 에서 개발 중인 experimental prototype 이다.
 >
@@ -428,11 +429,11 @@ compile
 ## 직접 실행해보고 싶다면
 
 - 이번 글에서 사용한 코드는 별도의 playground 로 정리해두었다.
-  - [kotlinllm-playground](https://codeberg.org/bossm0n5t3r/kotlinllm-playground)
+  - [kotlinllm-playground](https://github.com/bossm0n5t3r/kotlinllm-playground)
 - repository 를 clone 할 때 KotlinLLM plugin submodule 도 함께 가져오면 된다.
 
 ```shell
-git clone --recurse-submodules https://codeberg.org/bossm0n5t3r/kotlinllm-playground.git
+git clone --recurse-submodules https://github.com/bossm0n5t3r/kotlinllm-playground.git
 cd kotlinllm-playground
 ```
 
@@ -451,7 +452,7 @@ cd kotlinllm-playground
 - 이후 Sandbox IDE 에서 playground 를 열고 KotlinLLM 의 `Initialize Files` 를 실행한 뒤 원하는 example 을 `Run with KotlinLLM` 으로 실행하면
   된다.
 - 자세한 환경 설정과 Gradle task 설명은 repository
-  의 [README](https://codeberg.org/bossm0n5t3r/kotlinllm-playground/src/branch/master/README.md) 에 정리해두었다.
+  의 [README](https://github.com/bossm0n5t3r/kotlinllm-playground/blob/master/README.md) 에 정리해두었다.
 - 이 글에서는 설정 과정보다는 KotlinLLM 을 실제로 실행했을 때 어떤 코드가 생성되고, 그 코드가 이후 어떻게 사용되는지에 초점을 맞췄다.
 
 ## 마무리
@@ -481,6 +482,6 @@ hot reload
 
 ## Links
 
-- [kotlinllm-playground](https://codeberg.org/bossm0n5t3r/kotlinllm-playground)
+- [kotlinllm-playground](https://github.com/bossm0n5t3r/kotlinllm-playground)
 - [JetBrains Research KotlinLLM](https://github.com/JetBrains-Research/kotlinllm-plugin)
 - [KotlinLLM is Going Open Source](https://blog.jetbrains.com/research/2026/07/kotlinllm-open-source/)

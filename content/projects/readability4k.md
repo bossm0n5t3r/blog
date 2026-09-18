@@ -1,5 +1,6 @@
 +++
 date = 2026-07-22T11:00:00+09:00
+lastmod = 2026-09-18
 title = "readability4k: Kotlin 으로 옮긴 Mozilla Readability"
 authors = ["Ji-Hoon Kim"]
 tags = ["Kotlin", "Mozilla Readability", "HTML", "Content Extraction", "JVM"]
@@ -10,7 +11,7 @@ categories = ["Kotlin", "HTML"]
 
 ## 들어가며
 
-- [readability4k](https://codeberg.org/bossm0n5t3r/readability4k) 는 HTML 문서에서 사람이 읽을 본문을 추출하는 [Mozilla Readability](https://github.com/mozilla/readability) 의 Kotlin 포트다.
+- [readability4k](https://github.com/bossm0n5t3r/readability4k) 는 HTML 문서에서 사람이 읽을 본문을 추출하는 [Mozilla Readability](https://github.com/mozilla/readability) 의 Kotlin 포트다.
 - 웹페이지의 본문만 필요할 때는 탐색 메뉴, 광고, 추천 영역, 댓글처럼 문맥을 흐리는 요소를 걷어내야 한다.
   - 읽기 모드
   - 아티클 아카이빙
@@ -172,7 +173,7 @@ val article = Readability(
 
 ![Mozilla Readability, readability4k, Sermilion readability4k 비교 화면](/images/projects/readability4k/0.png)
 
-아직 버그가 있을 수 있다. 기대와 다른 결과를 발견했다면 재현할 URL 과 기대 결과를 함께 [Codeberg issue](https://codeberg.org/bossm0n5t3r/readability4k/issues) 또는 [이메일](mailto:hello@m0n5t3r.com)로 알려주면 고맙겠다.
+아직 버그가 있을 수 있다. 기대와 다른 결과를 발견했다면 재현할 URL 과 기대 결과를 함께 [GitHub issue](https://github.com/bossm0n5t3r/readability4k/issues) 또는 [이메일](mailto:hello@m0n5t3r.com)로 알려주면 고맙겠다.
 
 ## 추출 결과는 sanitizer 가 아니다
 
@@ -180,4 +181,4 @@ val article = Readability(
 
 외부 페이지의 `content` 를 브라우저에 삽입할 때는 사용하는 UI 프레임워크의 안전한 렌더링 방식을 따르고, 필요하면 별도의 HTML sanitizer 를 적용해야 한다.
 
-프로젝트 소스와 사용 방법은 [Codeberg 저장소](https://codeberg.org/bossm0n5t3r/readability4k) 에서 확인할 수 있다.
+프로젝트 소스와 사용 방법은 [GitHub 저장소](https://github.com/bossm0n5t3r/readability4k) 에서 확인할 수 있다.
