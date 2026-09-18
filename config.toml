@@ -109,3 +109,4 @@ tabWidth = 4
 renderer.unsafe = true
 [markup.goldmark.extensions]
 footnote = true
+typographer = false
