@@ -21,6 +21,10 @@ since = 2023
 katex = true
 
 [[params.book_groups]]
+title = "그로스 해킹: 데이터로 증명하는 성장의 공식"
+prefix = "growth-hacking"
+
+[[params.book_groups]]
 title = "그림과 실습으로 배우는 쿠버네티스 입문"
 prefix = "bbf-k8s"
 
