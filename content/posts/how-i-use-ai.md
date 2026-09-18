@@ -8,7 +8,7 @@ categories = ["AI"]
 series = []
 +++
 
-![](/images/Written-By-a-Human-Not-By-AI-Badge-white.svg)
+[![](/images/Written-By-a-Human-Not-By-AI-Badge-white.svg)](https://notbyai.fyi/)
 
 ## 들어가며
 

@@ -5,6 +5,8 @@ authors = ["Ji-Hoon Kim"]
 tags = ["growth-hacking", "marketing"]
 +++
 
+[![](/images/Written-By-a-Human-Not-By-AI-Badge-white.svg)](https://notbyai.fyi/)
+
 ![cover.jpg](/images/books/growth-hacking/cover.jpg)
 
 ## 들어가며
