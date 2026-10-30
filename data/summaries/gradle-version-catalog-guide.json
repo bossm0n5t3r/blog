@@ -1,6 +1,6 @@
 {
   "title": "gradle-version-catalog-guide",
   "key": "gradle-version-catalog-guide",
-  "summary": "- Gradle Version Catalog는 Gradle 7.4부터 공식 기능으로 도입되어, 복잡한 의존성 문자열을 중앙의 `libs.versions.toml` 파일에서 관리하고 타입 세이프한 방식으로 참조할 수 있게 한다.  \n- 중앙집중식 버전 관리로 일관성을 유지하고, 빌드 성능을 향상시키며, 보안 취약점 대응 시 한 곳만 수정하면 모든 모듈에 즉시 반영할 수 있다.  \n- 대규모 프로젝트에서는 `buildSrc`나 Convention Plugin에서 Catalog를 활용하려면 `settings.gradle.kts`에 별도 설정이 필요하며, 멀티 Catalog 전략과 별칭 정책으로 TOML 파일 관리를 효율화할 수 있다.  \n- 주요 한계로는 라이브러리 추가/제거 시 빌드 캐시 전체 무효화 문제와 동적 버전 미지원이 있으며, Gradle 팀이 개선 중이고 원격 캐시나 dependency locking으로 대응 가능하다.  \n- 팀 거버넌스 차원에서는 `CODEOWNERS` 지정, PR 템플릿 활용, 자동 의존성 업데이트 도구 연동 등 명확한 규칙과 프로세스가 필요하며, 이를 통해 협업 문화와 빌드 안정성을 높일 수 있다.  \n- Version Catalog는 단순 도구를 넘어 팀의 빌드 시스템 투명성과 협업을 강화하는 문화적 기반이 되어, 더 안전하고 품질 높은 소프트웨어 개발에 기여한다.",
-  "updatedAt": "2025-11-22T15:36:20.540Z"
+  "summary": "- Gradle Version Catalog는 의존성과 플러그인 버전을 중앙에서 선언하고 타입 세이프하게 참조할 수 있도록 지원하는 기능으로, Gradle 7.4 이후 표준 의존성 관리 방식으로 자리 잡았다.  \n- `libs.versions.toml` 파일에서 버전, 라이브러리, 번들, 플러그인 네 가지 영역을 정의하며, Kotlin DSL에서 자동 생성된 접근자를 통해 의존성을 선언한다.  \n- Version Catalog는 요청 버전을 중앙화하지만 실제 의존성 해결 시 다른 버전이 선택될 수 있어, BOM, Platform, Dependency Locking과 역할이 다르며 함께 사용해야 한다.  \n- 타입 세이프티와 IDE 자동 완성 지원으로 빌드 스크립트 오류를 줄이고, `buildSrc` 기반 버전 상수 관리보다 빌드 로직과 의존성 선언을 분리할 수 있다.  \n- 대규모 멀티 모듈 프로젝트에서는 `buildSrc`나 Included Build 기반 Convention Plugin에서 Catalog를 명시적으로 등록해 사용하며, Precompiled Script Plugin에서는 `VersionCatalogsExtension`을 통해 접근해야 한다.  \n- 실제 의존성 문제 해결을 위해서는 TOML 선언뿐 아니라 `./gradlew dependencies`와 `dependencyInsight` 명령어로 선택된 버전을 확인하고, 팀 단위 거버넌스와 자동화 전략을 병행하는 것이 중요하다.",
+  "updatedAt": "2026-10-30T14:00:00.000Z"
 }
