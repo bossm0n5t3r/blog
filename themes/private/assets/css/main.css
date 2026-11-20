@@ -141,12 +141,13 @@ li {
 
 th,
 td {
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.75rem;
 }
 
 table {
   border-collapse: collapse;
   margin: 1rem 0;
+  font-size: 0.9em;
 }
 
 main > table {
@@ -157,7 +158,18 @@ main > table {
 
 table td,
 table th {
-  border: 2px solid;
+  border: 1px solid;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  vertical-align: top;
+}
+
+table th {
+  white-space: nowrap;
+}
+
+table td code {
+  white-space: nowrap;
 }
 
 table tr:first-child th {
@@ -262,6 +274,6 @@ code {
 
   th,
   td {
-    padding: 0.6rem 0.75rem;
+    padding: 0.4rem 0.5rem;
   }
 }
